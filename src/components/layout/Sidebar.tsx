@@ -79,7 +79,7 @@ export const MobileNav = () => {
       <button
         onClick={handleLogout}
         disabled={isLoading}
-        className="flex min-h-11 flex-1 flex-col items-center justify-center gap-1 text-[10px] text-[#EF4444] disabled:opacity-50"
+        className="flex min-h-11 flex-1 flex-col items-center justify-center gap-1 text-[10px] text-[#EF4444] disabled:opacity-50 cursor-pointer"
       >
         <LogOut size={18} />
         {isLoading ? "Keluar..." : "Keluar"}

@@ -81,10 +81,10 @@ export function DeptList({
         <div className="flex rounded-lg bg-[#F1F5F9] p-0.5">
           <button
             onClick={() => setView("list")}
-            className={`flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-xs font-semibold transition ${
+            className={`flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
               view === "list"
-                ? "bg-white text-slate-800 shadow-sm"
-                : "text-[#64748B] hover:text-slate-800"
+                ? "bg-[#009B55] text-white shadow-sm"
+                : "text-[#64748B] hover:text-[#008A4C] hover:bg-slate-50"
             }`}
           >
             <List size={14} />
@@ -92,10 +92,10 @@ export function DeptList({
           </button>
           <button
             onClick={() => setView("people")}
-            className={`flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-xs font-semibold transition ${
+            className={`flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
               view === "people"
-                ? "bg-white text-slate-800 shadow-sm"
-                : "text-[#64748B] hover:text-slate-800"
+                ? "bg-[#009B55] text-white shadow-sm"
+                : "text-[#64748B] hover:text-[#008A4C] hover:bg-slate-50"
             }`}
           >
             <Users size={14} />

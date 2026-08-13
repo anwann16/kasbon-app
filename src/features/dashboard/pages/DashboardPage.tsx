@@ -40,21 +40,21 @@ const DashboardPage = () => {
 
   return (
     <section>
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start gap-4">
         <div>
-          <h1 className="mb-2 text-[32px] font-bold tracking-[-.04em]">
+          <h1 className="mb-2 text-2xl sm:text-[32px] font-bold tracking-[-.04em]">
             Dashboard
           </h1>
-          <p className="mb-6 text-sm text-[#475569]">
+          <p className="mb-6 text-xs sm:text-sm text-[#475569]">
             Kelola catatan hutang piutangmu biar nggak ada yang kelewat.
           </p>
         </div>
         <Button
           onClick={handleOpenCreate}
-          className="mt-5 flex items-center gap-2 rounded-[9px] bg-[#009B55] px-4 py-5 text-sm font-semibold text-white cursor-pointer"
+          className="mt-2 sm:mt-5 flex items-center gap-2 rounded-[9px] bg-[#009B55] p-3 sm:px-4 sm:py-5 text-sm font-semibold text-white cursor-pointer shrink-0"
         >
           <Plus size={16} />
-          Catat Hutang/Piutang
+          <span className="hidden sm:inline">Catat Hutang/Piutang</span>
         </Button>
       </div>
 

@@ -11,7 +11,7 @@ export function BarChart({
   payable: number;
   net: number;
 }) {
-  const maxVal = Math.max(receivable, payable, 1000);
+  const maxVal = Math.max(receivable, payable);
   const total = receivable + payable;
   const receivableRatio = total > 0 ? (receivable / total) * 100 : 0;
   const payableRatio = total > 0 ? (payable / total) * 100 : 0;
@@ -28,9 +28,9 @@ export function BarChart({
       <div className="mt-6 grid gap-6 md:grid-cols-[1fr_250px]">
         <div className="flex flex-col justify-center items-center rounded-xl bg-[#F8FAF9] p-5 min-h-60 border border-[#EEF1F0]">
           <div className="w-full max-w-md">
-            <div className="flex justify-between text-xs font-semibold text-[#64748B] mb-2 px-1">
-              <span>{formatRupiah(maxVal)}</span>
-              <span>{formatRupiah(0)}</span>
+            <div className="flex justify-around text-center text-xs font-semibold mb-2">
+              <span className="w-full text-[#008F4C]">{formatRupiah(receivable)}</span>
+              <span className="w-full text-[#D92D3E]">{formatRupiah(payable)}</span>
             </div>
 
             <div className="flex h-36 items-end justify-around gap-6 border-b border-[#E2E8F0] pb-2">
@@ -38,7 +38,7 @@ export function BarChart({
                 <div className="relative flex-1 w-full flex items-end justify-center">
                   <div
                     style={{
-                      height: `${Math.max(4, (receivable / maxVal) * 100)}%`,
+                      height: `${maxVal > 0 ? (receivable / maxVal) * 100 : 0}%`,
                     }}
                     className="w-full max-w-20 rounded-t-lg bg-[#009B55] transition-all duration-500 hover:bg-[#008A4C] hover:scale-[1.02] cursor-pointer shadow-sm relative group"
                   >
@@ -56,7 +56,7 @@ export function BarChart({
                 <div className="relative flex-1 w-full flex items-end justify-center">
                   <div
                     style={{
-                      height: `${Math.max(4, (payable / maxVal) * 100)}%`,
+                      height: `${maxVal > 0 ? (payable / maxVal) * 100 : 0}%`,
                     }}
                     className="w-full max-w-20 rounded-t-lg bg-[#D92D3E] transition-all duration-500 hover:bg-[#B91C1C] hover:scale-[1.02] cursor-pointer shadow-sm relative group"
                   >

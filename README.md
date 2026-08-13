@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kasbon App
 
-## Getting Started
+Aplikasi pencatatan dan pengelolaan utang piutang (kasbon) sederhana, responsif, dan premium, dibangun menggunakan Next.js, TailwindCSS, TypeScript, dan terintegrasi dengan database Supabase.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 1. Setup
+
+### Environment Variables
+
+Buat file `.env.local` pada direktori root project dan isi dengan variabel berikut:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-anon-key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Cara Migrate Database
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Skema tabel database terletak di folder `supabase/migrations/`. Kamu dapat melakukan migrasi dengan dua cara:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Menggunakan Supabase CLI**:
+   Jalankan perintah berikut di terminal:
 
-## Learn More
+   ```bash
+   supabase db push
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Manual via Dashboard Supabase**:
+   Salin konten SQL di folder `supabase/migrations/`
+   Lalu tempelkan dan jalankan secara berurutan di dalam menu **SQL Editor** pada dashboard proyek Supabase Anda.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Cara Menjalankan Project secara Lokal
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Gunakan Bun (runtime manager default proyek ini) untuk menjalankan server lokal:
 
-## Deploy on Vercel
+```bash
+# 1. Install dependencies
+bun install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# 2. Jalankan server development
+bun run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Buka [http://localhost:3000](http://localhost:3000) pada browser Anda untuk melihat hasilnya.
+
+---
+
+## 2. Demo
+
+Aplikasi dideploy dan dapat diakses langsung melalui link berikut:
+👉 **[https://kasbon-app-demo.vercel.app](https://kasbon-app-demo.vercel.app)**
+
+---
+
+## 3. Approach (Pendekatan Teknis)
+
+Keputusan teknis yang paling saya banggakan dalam proyek ini adalah memisahkan seluruh logika bisnis (seperti penanganan state lokal, pemanggilan API service, formatting data, hingga kalkulasi agregat nominal rasio saldo) dari layer komponen visual UI ke dalam custom hooks terpisah (seperti `useDashboard`, `useDeptList`, `useLogout`, dll). Dengan pendekatan ini, file komponen Next.js (seperti `DashboardPage`, `DeptList`, `Sidebar`) tetap bersih dan hanya fokus menangani tata letak layout serta styling CSS. Selain membuat struktur kode jauh lebih bersih dan rapi, pemisahan modular ini sangat mempermudah proses pemeliharaan kode (maintenance) dan pengujian (testing) karena logika terisolasi penuh dari siklus rendering UI.
+
+---
+
+## 4. Trade-off (Rencana Pengembangan Lanjutan)
+
+Jika saya memiliki tambahan waktu 1 hari lagi, mungkin saya ingin mengintegrasikan ke ai agar bisa menambah catatan hutang/piutang dengan input chat, tanpa perlu mengisi form secara manual.
+
+---
+
+## 5. Time Spent (Alokasi Waktu Kerja)
+
+Total waktu yang dihabiskan untuk menyelesaikan seluruh implementasi dan pembersihan fitur ini adalah **sekitar 13 jam** (meliputi proses perbaikan layout mobile & desktop, integrasi API hook, setup form control & zod schemas validation, perbaikan bug numerik input, integrasi konfirmasi status lunas, penambahan fitur delete database, pembuatan halaman Ringkasan baru beserta grafik bar chart, serta perapian penamaan komponen dan deploy ke vercel).
