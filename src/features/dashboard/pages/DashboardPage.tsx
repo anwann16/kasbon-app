@@ -6,15 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Plus, Loader2 } from "lucide-react";
 import { Modal } from "../components/DeptModal";
 import { useDashboard } from "../hooks/useDashboard";
+import { ConfirmModal } from "@/components/shared/ConfirmModal";
 
 const DashboardPage = () => {
   const {
     debts,
-    setDebts,
     isLoading,
     isModalOpen,
+    editingDebt,
+    deleteConfirmOpen,
+    setDeleteConfirmOpen,
     handleOpenCreate,
+    handleOpenEdit,
     handleCloseModal,
+    handleRequestDelete,
+    handleConfirmDelete,
     handleToggleSettled,
     handleAddSuccess,
     receivable,
@@ -62,11 +68,8 @@ const DashboardPage = () => {
 
       <DeptList
         debts={debts}
-        onEdit={() => {}}
-        onDelete={(id) => {
-          if (window.confirm("Hapus catatan ini?"))
-            setDebts((items) => items.filter((item) => item.id !== id));
-        }}
+        onEdit={handleOpenEdit}
+        onDelete={handleRequestDelete}
         onToggle={handleToggleSettled}
       />
 
@@ -74,6 +77,18 @@ const DashboardPage = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSuccess={handleAddSuccess}
+        editingDebt={editingDebt}
+      />
+
+      <ConfirmModal
+        isOpen={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Hapus Catatan"
+        description="Apakah kamu yakin ingin menghapus catatan hutang/piutang ini secara permanen?"
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+        confirmVariant="destructive"
       />
     </section>
   );

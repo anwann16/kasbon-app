@@ -2,20 +2,53 @@
 
 import { useState } from "react";
 import { useGetDebts } from "@/features/debts/hooks/useGetDebts";
-import { updateDebt } from "@/features/debts/service/debt.service";
+import { updateDebt, deleteDebt } from "@/features/debts/service/debt.service";
 import { toast } from "sonner";
 import type { Debt } from "@/features/debts/types/debt";
 
 export function useDashboard() {
   const { debts, setDebts, isLoading } = useGetDebts();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingDebt, setEditingDebt] = useState<Debt | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [targetDeleteId, setTargetDeleteId] = useState<string | null>(null);
 
   const handleOpenCreate = () => {
+    setEditingDebt(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (debt: Debt) => {
+    setEditingDebt(debt);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setEditingDebt(null);
+  };
+
+  const handleRequestDelete = (id: string) => {
+    setTargetDeleteId(id);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!targetDeleteId) return;
+    try {
+      await deleteDebt(targetDeleteId);
+      setDebts((prev) => prev.filter((d) => d.id !== targetDeleteId));
+      toast.success("Catatan hutang/piutang berhasil dihapus!");
+    } catch (err: any) {
+      const errMsg =
+        err.response?.data?.message ||
+        err.message ||
+        "Gagal menghapus catatan.";
+      toast.error(errMsg);
+    } finally {
+      setDeleteConfirmOpen(false);
+      setTargetDeleteId(null);
+    }
   };
 
   const handleToggleSettled = async (id: string) => {
@@ -67,8 +100,17 @@ export function useDashboard() {
     }
   };
 
-  const handleAddSuccess = (newDebt: Debt) => {
-    setDebts((prev) => [newDebt, ...prev]);
+  const handleAddSuccess = (newOrUpdatedDebt: Debt) => {
+    setDebts((prev) => {
+      const exists = prev.some((d) => d.id === newOrUpdatedDebt.id);
+      if (exists) {
+        return prev.map((d) =>
+          d.id === newOrUpdatedDebt.id ? newOrUpdatedDebt : d,
+        );
+      } else {
+        return [newOrUpdatedDebt, ...prev];
+      }
+    });
   };
 
   const receivable = debts.reduce(
@@ -95,8 +137,14 @@ export function useDashboard() {
     setDebts,
     isLoading,
     isModalOpen,
+    editingDebt,
+    deleteConfirmOpen,
+    setDeleteConfirmOpen,
     handleOpenCreate,
+    handleOpenEdit,
     handleCloseModal,
+    handleRequestDelete,
+    handleConfirmDelete,
     handleToggleSettled,
     handleAddSuccess,
     receivable,

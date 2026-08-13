@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -9,11 +9,15 @@ import {
 } from "@/lib/schemas/debt.schema";
 import { toast } from "sonner";
 import type { Debt } from "../types/debt";
-import { createDebt } from "../service/debt.service";
+import { createDebt, updateDebt } from "../service/debt.service";
 
-export function useCreateDebt({
+export function useDebtForm({
+  editingDebt,
   onSuccess,
-}: { onSuccess?: (newDebt: Debt) => void } = {}) {
+}: {
+  editingDebt: Debt | null;
+  onSuccess?: (debt: Debt) => void;
+}) {
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm<CreateDebtInput>({
@@ -27,11 +31,43 @@ export function useCreateDebt({
     },
   });
 
+  useEffect(() => {
+    if (editingDebt) {
+      form.reset({
+        type: editingDebt.type,
+        counterpart_name: editingDebt.counterpartName,
+        amount: editingDebt.amount,
+        note: editingDebt.note || "",
+        due_date: editingDebt.dueDate ? editingDebt.dueDate.slice(0, 10) : "",
+      });
+    } else {
+      form.reset({
+        type: "owed_to_me",
+        counterpart_name: "",
+        amount: "" as any,
+        note: "",
+        due_date: new Date().toISOString().slice(0, 10),
+      });
+    }
+  }, [editingDebt, form]);
+
   const onSubmit = async (data: CreateDebtInput) => {
     setError(null);
 
     try {
-      const dbDebt = (await createDebt(data)) as any;
+      let dbDebt: any;
+      if (editingDebt) {
+        dbDebt = (await updateDebt(editingDebt.id, {
+          type: data.type,
+          counterpart_name: data.counterpart_name,
+          amount: data.amount,
+          note: data.note,
+          due_date: data.due_date,
+        })) as any;
+      } else {
+        dbDebt = (await createDebt(data)) as any;
+      }
+
       const clientDebt: Debt = {
         id: dbDebt.id,
         type: dbDebt.type,
@@ -46,7 +82,11 @@ export function useCreateDebt({
         createdAt: dbDebt.created_at || dbDebt.createdAt,
       };
 
-      toast.success("Catatan hutang/piutang berhasil dibuat!");
+      toast.success(
+        editingDebt
+          ? "Catatan hutang/piutang berhasil diperbarui!"
+          : "Catatan hutang/piutang berhasil dibuat!"
+      );
 
       form.reset();
       if (onSuccess) {

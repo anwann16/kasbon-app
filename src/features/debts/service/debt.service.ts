@@ -34,3 +34,7 @@ export async function getDebts(params?: GetDebtsInput): Promise<Debt[]> {
 
   return response.data.data;
 }
+
+export async function deleteDebt(id: string): Promise<void> {
+  await axiosInstance.delete<ApiResponse<void>>(`/debts/${id}`);
+}

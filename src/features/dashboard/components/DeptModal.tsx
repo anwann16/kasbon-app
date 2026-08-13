@@ -1,6 +1,6 @@
 import { X, Loader2 } from "lucide-react";
 import { Controller } from "react-hook-form";
-import { useCreateDebt } from "@/features/debts/hooks/useCreateDebt";
+import { useDebtForm } from "@/features/debts/hooks/useDebtForm";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -15,12 +15,15 @@ export function Modal({
   isOpen,
   onClose,
   onSuccess,
+  editingDebt,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: (newDebt: Debt) => void;
+  editingDebt: Debt | null;
 }) {
-  const { form, onSubmit, error, isSubmitting } = useCreateDebt({
+  const { form, onSubmit, error, isSubmitting } = useDebtForm({
+    editingDebt,
     onSuccess: (newDebt) => {
       onSuccess(newDebt);
       onClose();
@@ -35,10 +38,10 @@ export function Modal({
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">
-              Catat hutang/piutang
+              {editingDebt ? "Ubah detail hutang/piutang" : "Catat hutang/piutang"}
             </p>
             <h2 className="mt-1 text-xl font-semibold">
-              Catat hutang/piutang baru
+              {editingDebt ? "Ubah catatan hutang/piutang" : "Catat hutang/piutang baru"}
             </h2>
           </div>
           <button
