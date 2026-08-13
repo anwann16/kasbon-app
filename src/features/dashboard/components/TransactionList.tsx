@@ -40,7 +40,7 @@ export function TransactionList({
       debts
         .filter(
           (debt) =>
-            debt.counterpartName
+            (debt.counterpartName || "")
               .toLowerCase()
               .includes(query.toLowerCase().trim()) &&
             (status === "semua" ||
