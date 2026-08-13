@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { formatRupiah, getInitials } from "@/lib/format";
-import type { Debt } from "../pages/mock";
+import type { Debt } from "@/features/debts/types/debt";
 
 export function PeopleView({ debts }: { debts: Debt[] }) {
   const groups = useMemo(() => {
@@ -52,7 +52,9 @@ export function PeopleView({ debts }: { debts: Debt[] }) {
   if (!groups.length) {
     return (
       <div className="mt-4 rounded-[14px] border border-dashed border-[#CBD5D1] bg-white py-16 text-center">
-        <h3 className="font-semibold text-slate-800">Tidak ada orang ditemukan</h3>
+        <h3 className="font-semibold text-slate-800">
+          Tidak ada orang ditemukan
+        </h3>
         <p className="mx-auto mt-2 max-w-xs text-sm text-[#64748B]">
           Coba ubah kata kunci pencarian atau filter Anda.
         </p>
@@ -78,7 +80,7 @@ export function PeopleView({ debts }: { debts: Debt[] }) {
                   {group.counterpartName}
                 </h3>
                 <p className="text-xs text-[#64748B] mt-0.5">
-                  {group.activeCount} transaksi aktif
+                  {group.activeCount} hutang/piutang aktif
                 </p>
               </div>
             </div>
@@ -97,13 +99,11 @@ export function PeopleView({ debts }: { debts: Debt[] }) {
                         : "text-[#64748B]"
                   }`}
                 >
-                  {net > 0 ? (
-                    `Piutang: ${formatRupiah(net)}`
-                  ) : net < 0 ? (
-                    `Hutang: ${formatRupiah(Math.abs(net))}`
-                  ) : (
-                    "Lunas / Balance"
-                  )}
+                  {net > 0
+                    ? `Piutang: ${formatRupiah(net)}`
+                    : net < 0
+                      ? `Hutang: ${formatRupiah(Math.abs(net))}`
+                      : "Lunas / Balance"}
                 </p>
               </div>
 
@@ -116,7 +116,11 @@ export function PeopleView({ debts }: { debts: Debt[] }) {
                       : "bg-[#F1F5F9] text-[#64748B]"
                 }`}
               >
-                {net > 0 ? "Dihutang ke saya" : net < 0 ? "Saya hutang" : "Lunas"}
+                {net > 0
+                  ? "Dihutang ke saya"
+                  : net < 0
+                    ? "Saya hutang"
+                    : "Lunas"}
               </span>
             </div>
           </article>

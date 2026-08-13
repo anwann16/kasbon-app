@@ -35,9 +35,11 @@ export function Modal({
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[#64748B]">
-              Catat transaksi
+              Catat hutang/piutang
             </p>
-            <h2 className="mt-1 text-xl font-semibold">Catat transaksi baru</h2>
+            <h2 className="mt-1 text-xl font-semibold">
+              Catat hutang/piutang baru
+            </h2>
           </div>
           <button
             onClick={onClose}
@@ -61,7 +63,7 @@ export function Modal({
               name="type"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Tipe Transaksi</FieldLabel>
+                  <FieldLabel>Tipe</FieldLabel>
                   <div className="flex gap-6">
                     <label className="flex items-center gap-2 cursor-pointer font-medium">
                       <input

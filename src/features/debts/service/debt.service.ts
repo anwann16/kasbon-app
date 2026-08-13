@@ -1,5 +1,6 @@
 import type {
   CreateDebtInput,
+  GetDebtsInput,
   UpdateDebtInput,
 } from "@/lib/schemas/debt.schema";
 import { ApiResponse } from "@/lib/api/types";
@@ -22,6 +23,14 @@ export async function updateDebt(
     `/debts/${id}`,
     payload,
   );
+
+  return response.data.data;
+}
+
+export async function getDebts(params?: GetDebtsInput): Promise<Debt[]> {
+  const response = await axiosInstance.get<ApiResponse<Debt[]>>("/debts", {
+    params,
+  });
 
   return response.data.data;
 }

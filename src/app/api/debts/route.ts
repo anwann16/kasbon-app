@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
-import { CreateDebtInput, createDebtSchema } from "@/lib/schemas/debt.schema";
+import {
+  CreateDebtInput,
+  createDebtSchema,
+  getDebtsSchema,
+} from "@/lib/schemas/debt.schema";
 import { errorResponse, successResponse } from "@/lib/api/response";
 
 export async function POST(request: NextRequest) {
@@ -38,5 +42,63 @@ export async function POST(request: NextRequest) {
     return successResponse(debt, "Catatan utang berhasil dibuat", 201);
   } catch (error) {
     return errorResponse("Gagal membuat catatan utang", 500);
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return errorResponse("Kamu harus login terlebih dahulu", 401);
+    }
+
+    const rawParams = Object.fromEntries(
+      request.nextUrl.searchParams.entries(),
+    );
+
+    const result = getDebtsSchema.safeParse(rawParams);
+
+    if (!result.success) {
+      return errorResponse(
+        "Parameter filter tidak valid",
+        400,
+        result.error.flatten().fieldErrors,
+      );
+    }
+
+    const { search, status, type, sort } = result.data;
+    let query = supabase.from("debts").select("*").eq("user_id", user.id);
+
+    if (search) {
+      query = query.ilike("counterpart_name", `%${search}%`);
+    }
+
+    if (status === "settled") {
+      query = query.not("settled_at", "is", null);
+    }
+    if (status === "unsettled") {
+      query = query.is("settled_at", null);
+    }
+    if (type) {
+      query = query.eq("type", type);
+    }
+    query = query.order("created_at", {
+      ascending: sort === "oldest",
+    });
+
+    const { data, error } = await query;
+
+    if (error) {
+      return errorResponse("Gagal mengambil data utang", 500);
+    }
+
+    return successResponse(data, "Data utang berhasil diambil");
+  } catch (error) {
+    return errorResponse("Gagal mengambil data utang", 500);
   }
 }

@@ -51,5 +51,13 @@ export const updateDebtSchema = z
     message: "Minimal satu field harus diubah",
   });
 
+export const getDebtsSchema = z.object({
+  search: z.string().optional(),
+  status: z.enum(["settled", "unsettled"]).optional(),
+  type: z.enum(["owed_to_me", "i_owe"]).optional(),
+  sort: z.enum(["newest", "oldest"]).default("newest"),
+});
+
+export type GetDebtsInput = z.infer<typeof getDebtsSchema>;
 export type CreateDebtInput = z.infer<typeof createDebtSchema>;
 export type UpdateDebtInput = z.infer<typeof updateDebtSchema>;

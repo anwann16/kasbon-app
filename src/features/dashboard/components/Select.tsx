@@ -7,16 +7,16 @@ export function Select({
 }: {
   value: string;
   onChange: (val: any) => void;
-  options: [string, string][];
+  options: { value: string; label: string }[];
 }) {
   return (
     <div className="relative">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-11 w-full appearance-none rounded-[9px] border border-[#E5E7EB] bg-white pl-4 pr-10 text-sm font-medium outline-none focus:border-[#009B55] focus:ring-2 focus:ring-[#009B55]/15"
+        className="h-11 w-full appearance-none rounded-[9px] border border-[#E5E7EB] bg-white pl-4 pr-10 text-sm font-medium outline-none focus:border-[#009B55] focus:ring-2 focus:ring-[#009B55]/15 cursor-pointer"
       >
-        {options.map(([val, label]) => (
+        {options.map(({ value: val, label }) => (
           <option key={val} value={val}>
             {label}
           </option>

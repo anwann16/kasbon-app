@@ -19,14 +19,14 @@ export function Summary({
       <SummaryCard
         title="Dihutang ke saya"
         amount={receivable}
-        count={`${receivedCount} transaksi`}
+        count={`${receivedCount} hutang/piutang`}
         color="green"
         icon={ArrowUpRight}
       />
       <SummaryCard
         title="Saya hutang"
         amount={payable}
-        count={`${owedCount} transaksi`}
+        count={`${owedCount} hutang/piutang`}
         color="red"
         icon={ArrowUpRight}
       />

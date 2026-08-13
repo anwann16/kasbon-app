@@ -1,32 +1,36 @@
 "use client";
 
-import { useState } from "react";
 import { Summary } from "../components/Summary";
-import { DEMO_DEBTS } from "./mock";
-import { TransactionList } from "../components/TransactionList";
+import { DeptList } from "../components/DeptList";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { Modal } from "../components/DeptModal";
+import { useDashboard } from "../hooks/useDashboard";
 
 const DashboardPage = () => {
-  const [debts, setDebts] = useState(DEMO_DEBTS);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    debts,
+    setDebts,
+    isLoading,
+    isModalOpen,
+    handleOpenCreate,
+    handleCloseModal,
+    handleToggleSettled,
+    handleAddSuccess,
+    receivable,
+    payable,
+    net,
+    receivedCount,
+    owedCount,
+  } = useDashboard();
 
-  const handleOpenCreate = () => {
-    setIsModalOpen(true);
-  };
-
-  const receivable = debts.reduce(
-    (sum, debt) =>
-      sum + (!debt.settledAt && debt.type === "owed_to_me" ? debt.amount : 0),
-    0,
-  );
-  const payable = debts.reduce(
-    (sum, debt) =>
-      sum + (!debt.settledAt && debt.type === "i_owe" ? debt.amount : 0),
-    0,
-  );
-  const net = receivable - payable;
+  if (isLoading) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="animate-spin text-[#009B55]" size={40} />
+      </div>
+    );
+  }
 
   return (
     <section>
@@ -52,42 +56,24 @@ const DashboardPage = () => {
         receivable={receivable}
         payable={payable}
         net={net}
-        receivedCount={
-          debts.filter((debt) => !debt.settledAt && debt.type === "owed_to_me")
-            .length
-        }
-        owedCount={
-          debts.filter((debt) => !debt.settledAt && debt.type === "i_owe")
-            .length
-        }
+        receivedCount={receivedCount}
+        owedCount={owedCount}
       />
 
-      <TransactionList
+      <DeptList
         debts={debts}
         onEdit={() => {}}
         onDelete={(id) => {
           if (window.confirm("Hapus catatan ini?"))
             setDebts((items) => items.filter((item) => item.id !== id));
         }}
-        onToggle={(id) =>
-          setDebts((items) =>
-            items.map((item) =>
-              item.id === id
-                ? {
-                    ...item,
-                    settledAt: item.settledAt ? null : new Date().toISOString(),
-                  }
-                : item,
-            ),
-          )
-        }
-        onCreate={handleOpenCreate}
+        onToggle={handleToggleSettled}
       />
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSuccess={(newDebt) => setDebts((prev) => [newDebt, ...prev])}
+        onClose={handleCloseModal}
+        onSuccess={handleAddSuccess}
       />
     </section>
   );
