@@ -42,12 +42,10 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/signup");
 
-  // Belum login → tidak boleh masuk dashboard
   if (isDashboard && !user) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Sudah login → tidak perlu masuk login/signup
   if (isAuth && user) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
@@ -56,5 +54,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/signup"],
+  matcher: ["/dashboard", "/ringkasan", "/login", "/signup"],
 };

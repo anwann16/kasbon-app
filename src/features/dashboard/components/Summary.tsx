@@ -61,7 +61,13 @@ function SummaryCard({
   };
   return (
     <article
-      className={`relative min-h-42.5 overflow-hidden rounded-[15px] border border-[#E5E7EB] bg-white p-5 ${color === "green" ? "after:bg-[#EAF8F1]" : color === "red" ? "after:bg-[#FDECEF]" : "after:bg-[#F1EDFF]"} after:absolute after:-bottom-16 after:-right-8 after:size-36 after:rounded-full after:opacity-60`}
+      className={`relative min-h-42.5 overflow-hidden rounded-[15px] border border-[#E5E7EB] bg-white p-5 ${
+        color === "green"
+          ? "after:bg-[#EAF8F1]"
+          : color === "red"
+            ? "after:bg-[#FDECEF]"
+            : "after:bg-[#F1EDFF]"
+      } after:absolute after:-bottom-16 after:-right-8 after:size-36 after:rounded-full after:opacity-60`}
     >
       <div className="relative z-10 flex items-start justify-between">
         <p className="text-sm font-medium text-[#475569]">{title}</p>
@@ -72,7 +78,13 @@ function SummaryCard({
         </span>
       </div>
       <p
-        className={`relative z-10 mt-9 text-[27px] font-bold tracking-[-.04em] ${color === "green" ? "text-[#008F4C]" : color === "red" ? "text-[#D92D3E]" : "text-[#673DE6]"}`}
+        className={`relative z-10 mt-9 text-[27px] font-bold tracking-[-.04em] ${
+          color === "green"
+            ? "text-[#008F4C]"
+            : color === "red"
+              ? "text-[#D92D3E]"
+              : "text-[#673DE6]"
+        }`}
       >
         {formatRupiah(amount)}
       </p>
