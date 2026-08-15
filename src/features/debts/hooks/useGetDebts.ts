@@ -38,7 +38,13 @@ export function useGetDebts(initialParams?: GetDebtsInput) {
 
   useEffect(() => {
     fetchDebts(initialParams);
-  }, [fetchDebts]);
+  }, [
+    initialParams?.search,
+    initialParams?.status,
+    initialParams?.type,
+    initialParams?.sort,
+    fetchDebts,
+  ]);
 
   return {
     debts,

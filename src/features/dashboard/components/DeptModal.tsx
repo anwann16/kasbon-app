@@ -11,17 +11,16 @@ import {
 import { Input } from "@/components/ui/input";
 import type { Debt } from "@/features/debts/types/debt";
 
-export function Modal({
-  isOpen,
-  onClose,
-  onSuccess,
-  editingDebt,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: (newDebt: Debt) => void;
-  editingDebt: Debt | null;
-}) {
+import { useDebt } from "@/features/debts/context/DebtContext";
+
+export function Modal() {
+  const {
+    isModalOpen: isOpen,
+    handleCloseModal: onClose,
+    handleAddSuccess: onSuccess,
+    editingDebt,
+  } = useDebt();
+
   const { form, onSubmit, error, isSubmitting } = useDebtForm({
     editingDebt,
     onSuccess: (newDebt) => {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   CalendarDays,
   Check,
@@ -11,32 +12,19 @@ import {
   Users,
 } from "lucide-react";
 import { formatRelativeDate, formatRupiah, getInitials } from "@/lib/format";
-import type {
-  Debt,
-  DebtType,
-  DebtStatusFilter,
-  DebtSort,
-} from "@/features/debts/types/debt";
+import type { DebtStatusFilter, DebtSort, DebtType } from "@/features/debts/types/debt";
 
 import { Select } from "./Select";
 import { PeopleView } from "./PeopleView";
 import { ConfirmModal } from "@/components/shared/ConfirmModal";
-import { useDeptList } from "../../debts/hooks/useDeptList";
+import { useDebt } from "@/features/debts/context/DebtContext";
 
-export function DeptList({
-  debts,
-  onEdit,
-  onDelete,
-  onToggle,
-}: {
-  debts: Debt[];
-  onEdit: (debt: Debt) => void;
-  onDelete: (id: string) => void;
-  onToggle: (id: string) => void;
-}) {
+export function DeptList() {
   const {
-    query,
-    setQuery,
+    debts,
+    allDebts,
+    search: query,
+    setSearch: setQuery,
     status,
     setStatus,
     type,
@@ -45,14 +33,30 @@ export function DeptList({
     setSort,
     view,
     setView,
-    confirmOpen,
-    setConfirmOpen,
-    handleOpenConfirm,
-    handleConfirmToggle,
-    visible,
-  } = useDeptList({ debts, onToggle });
+    handleOpenEdit: onEdit,
+    handleRequestDelete: onDelete,
+    handleToggleSettled: onToggle,
+  } = useDebt();
 
-  if (!debts.length) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [targetDebtId, setTargetDebtId] = useState<string | null>(null);
+
+  const handleOpenConfirm = (id: string) => {
+    setTargetDebtId(id);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmToggle = () => {
+    if (targetDebtId) {
+      onToggle(targetDebtId);
+    }
+    setConfirmOpen(false);
+    setTargetDebtId(null);
+  };
+
+  const visible = debts;
+
+  if (!allDebts.length) {
     return (
       <div className="mt-4 rounded-[14px] border border-dashed border-[#CBD5D1] bg-white py-16 text-center">
         <div className="mx-auto grid size-12 place-items-center rounded-full bg-[#EAF8F1] text-[#009B55]">
@@ -75,7 +79,7 @@ export function DeptList({
             Daftar Hutang/Piutang
           </h2>
           <p className="text-sm text-[#64748B]">
-            Total {debts.length} Hutang/Piutang tercatat
+            Total {visible.length} Hutang/Piutang tercatat
           </p>
         </div>
         <div className="flex rounded-lg bg-[#F1F5F9] p-0.5">

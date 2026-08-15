@@ -55,7 +55,7 @@ export const getDebtsSchema = z.object({
   search: z.string().optional(),
   status: z.enum(["settled", "unsettled"]).optional(),
   type: z.enum(["owed_to_me", "i_owe"]).optional(),
-  sort: z.enum(["newest", "oldest"]).default("newest"),
+  sort: z.enum(["newest", "oldest", "highest", "lowest"]).default("newest"),
 });
 
 export type GetDebtsInput = z.infer<typeof getDebtsSchema>;

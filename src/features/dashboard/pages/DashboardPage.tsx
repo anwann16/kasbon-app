@@ -5,30 +5,22 @@ import { DeptList } from "../components/DeptList";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2 } from "lucide-react";
 import { Modal } from "../components/DeptModal";
-import { useDashboard } from "../hooks/useDashboard";
+import { useDebt } from "@/features/debts/context/DebtContext";
 import { ConfirmModal } from "@/components/shared/ConfirmModal";
 
 const DashboardPage = () => {
   const {
-    debts,
     isLoading,
-    isModalOpen,
-    editingDebt,
     deleteConfirmOpen,
     setDeleteConfirmOpen,
     handleOpenCreate,
-    handleOpenEdit,
-    handleCloseModal,
-    handleRequestDelete,
     handleConfirmDelete,
-    handleToggleSettled,
-    handleAddSuccess,
     receivable,
     payable,
     net,
     receivedCount,
     owedCount,
-  } = useDashboard();
+  } = useDebt();
 
   if (isLoading) {
     return (
@@ -66,19 +58,9 @@ const DashboardPage = () => {
         owedCount={owedCount}
       />
 
-      <DeptList
-        debts={debts}
-        onEdit={handleOpenEdit}
-        onDelete={handleRequestDelete}
-        onToggle={handleToggleSettled}
-      />
+      <DeptList />
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSuccess={handleAddSuccess}
-        editingDebt={editingDebt}
-      />
+      <Modal />
 
       <ConfirmModal
         isOpen={deleteConfirmOpen}

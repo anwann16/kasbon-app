@@ -87,9 +87,15 @@ export async function GET(request: NextRequest) {
     if (type) {
       query = query.eq("type", type);
     }
-    query = query.order("created_at", {
-      ascending: sort === "oldest",
-    });
+    if (sort === "highest" || sort === "lowest") {
+      query = query.order("amount", {
+        ascending: sort === "lowest",
+      });
+    } else {
+      query = query.order("created_at", {
+        ascending: sort === "oldest",
+      });
+    }
 
     const { data, error } = await query;
 

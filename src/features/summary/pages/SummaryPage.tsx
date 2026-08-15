@@ -3,11 +3,17 @@
 import { Summary } from "../../dashboard/components/Summary";
 import { BarChart } from "../components/BarChart";
 import { Loader2 } from "lucide-react";
-import { useDashboard } from "../../dashboard/hooks/useDashboard";
+import { useDebt } from "@/features/debts/context/DebtContext";
 
 const SummaryPage = () => {
-  const { receivable, payable, net, receivedCount, owedCount, isLoading } =
-    useDashboard();
+  const {
+    receivable,
+    payable,
+    net,
+    receivedCount,
+    owedCount,
+    isLoading,
+  } = useDebt();
 
   if (isLoading) {
     return (
